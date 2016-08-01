@@ -73,11 +73,11 @@ public class Main {
 		// print(y)
 		System.out.println("print(y) -> " +  memory.get("y")); //new PrintStm(new SingleExpList(new IdExp("y")))
 			
-		//print(y, y-1)
+		//print(y, y+1)
 		new PrintStm(new PairExpList(new IdExp("y"), new SingleExpList(new ExpPlus(new IdExp("y"), new NumExp(1))))).interpret(memory);
 		System.out.println( "print(y, y + 1) -> " + memory.get("y") );//new PrintStm(new PairExpList(new IdExp("y"), new SingleExpList(new ExpPlus(new IdExp("y"), new NumExp(1)))))
 		
-		
+		System.out.println(memory.get("y"));
 	}
 
 }
