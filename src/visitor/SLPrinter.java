@@ -5,6 +5,9 @@ import expression.ExpDivision;
 import expression.ExpMinus;
 import expression.ExpPlus;
 import expression.ExpTimes;
+import expression.IdExp;
+import expression.NumExp;
+import expression.StmExp;
 import statment.AssignStm;
 import statment.PrintStm;
 
@@ -13,7 +16,7 @@ public class SLPrinter implements SLVisitor {
 
 	public Object visitAssignStm(AssignStm stm) {
 		
-		return stm.id + " := " + stm.exp.accept(this);
+		return stm.id + " := " + stm;
 	}
 
 	public Object visitPrintStm(PrintStm stm) {
@@ -46,6 +49,24 @@ public class SLPrinter implements SLVisitor {
 	public Object visitExpDivision(ExpDivision exp){
 		
 		return "(" + exp.left.accept(this) + " / " + exp.right.accept(this) + ")";
+	}
+
+	public Object visitStmExp(StmExp stmExp) {
+	
+		return stmExp.accept(this);
+	}
+
+	public Object visitIdExp(IdExp idExp) {
+
+		return idExp.id;
+	}
+
+	public Object visitNumExp(NumExp numExp) {
+	
+		
+		
+		
+		return numExp.num;
 	}
 
 }

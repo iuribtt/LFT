@@ -17,8 +17,7 @@ public class NumExp extends Exp {
 
 	@Override
 	public Object accept(SLVisitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
+		return visitor.visitNumExp(this);
 	}
 
 }
