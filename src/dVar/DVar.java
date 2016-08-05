@@ -1,5 +1,6 @@
 package dVar;
 
-public class DVar {
+
+abstract public class DVar {
 
 }

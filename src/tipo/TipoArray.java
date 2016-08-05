@@ -5,7 +5,7 @@ import java.util.List;
 import exp.Exp;
 import tBase.TBase;
 
-public class TipoArray {
+public class TipoArray extends Tipo {
 	
 	List<Exp> exps;
 	TBase tBase;

@@ -2,7 +2,7 @@ package tipo;
 
 import tBase.TBase;
 
-public class TipoBase {
+public class TipoBase extends Tipo{
 	
 	TBase tBase;
 	

@@ -1,5 +1,7 @@
 package dCons;
 
-public class DCons {
+
+abstract public class DCons {
+	
 
 }
