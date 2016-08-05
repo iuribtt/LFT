@@ -1,5 +1,7 @@
 package dVar;
 
-public class DVar {
+import programa.Programa;
+
+abstract public class DVar extends Programa {
 
 }

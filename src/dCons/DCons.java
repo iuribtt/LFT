@@ -1,5 +1,12 @@
 package dCons;
 
-public class DCons {
+import programa.Programa;
 
+public class DCons extends Programa {
+	public DCons cons;
+	
+	public DCons (DCons d){
+		this.cons=d;
+	}
+	
 }
