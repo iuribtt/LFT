@@ -8,7 +8,6 @@ import var.ID;
 
 public class ConsComp {
 	
-	
 	Tipo tipo;
 	ID id;
 	List<ID> ids;
