@@ -54,15 +54,14 @@ import visitor.XVisitor;
 // xlanguage.chegagem
 public class Checador implements XVisitor{
 
-	//TabelaSimbolos<String, VinculavelConsVar> ambienteVars = new TabelaSimbolos<...>();
+	TabelaSimbolos<String, VinculavelConsVar> ambienteVars = new TabelaSimbolos<...>();
 	
-	//HashMap<String, VinculavelFunProg> ambienteSub = new HasMap<...>();
+	HashMap<String, VinculavelFunProg> ambienteSub = new HasMap<...>();
 	
 	
 	public Object visitBinExp(BinExp exp) {
 	
 		if(exp.operador == BinOp.Som){
-			//type classe criada?
 			TBase tesquerda = (TBase) exp.esquerda.accept(this);
 			TBase tdireita = (TBase) exp.direita.accept(this);
 			

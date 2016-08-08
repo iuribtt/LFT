@@ -8,15 +8,15 @@ public class Funcao extends Dec{
 
 	String id;
 	List<Parametro> parametros;
-	Comando comando;
+	Exp exp;
 	Tipo tipo;
 	
-	public Funcao(Tipo tipo, String id, List<Parametro> parametros, Comando comando) {
+	public Funcao(Tipo tipo, String id, List<Parametro> parametros, Exp exp) {
 		
 		this.tipo = tipo;
 		this.id = id;
 		this.parametros = parametros;
-		this.comando = comando;
+		this.exp = exp;
 	}
 
 	@Override

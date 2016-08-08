@@ -5,7 +5,7 @@ import java.util.List;
 public class Programa {
 	
 	
-	List<Dec> decs;
+	public List<Dec> decs;
 	
 	public Programa(List<Dec> decs) {
 		
