@@ -60,6 +60,4 @@ public interface XVisitor {
 	Object visitSimples(Simples simples);
 	Object visitIndexada(Indexada indexada);
 
-	
-	
 }

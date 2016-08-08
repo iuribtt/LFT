@@ -61,21 +61,26 @@ public class Checador implements XVisitor{
 	
 	public Object visitBinExp(BinExp exp) {
 	
-		/*if(operador == BinOp.Som){
+		if(exp.operador == BinOp.Som){
 			//type classe criada?
-			Type tesquerda = (Type) esquerda.left.accept(this);
-			Type tdireita = (Type) direita.left.accept(this);
+			TBase tesquerda = (TBase) exp.esquerda.accept(this);
+			TBase tdireita = (TBase) exp.direita.accept(this);
 			
 			if(tesquerda == TBase.Int && tdireita == TBase.Int)
 				return TBase.Int;
 			
 			else if  (tesquerda == TBase.Real && tdireita == TBase.Real)
 				return TBase.Real;
-			
 			else
-				throw new Exception();
-		}else if(operador == BinOp.Mul){*/
+				try {
+					throw new Exception();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
+		}else if(exp.operador == BinOp.Mul){
 		//....
+		}
 			
 		return null;
 	}
