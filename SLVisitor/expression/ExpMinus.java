@@ -18,8 +18,7 @@ public class ExpMinus extends Exp {
 
 	@Override
 	public  Object accept(SLVisitor visitor) {
-	
-		return visitor.visitExpMinus(this);
+	 visitor.visitExpMinus(this);
 	}
 	
 }

@@ -64,8 +64,6 @@ public class SLPrinter implements SLVisitor {
 	public Object visitNumExp(NumExp numExp) {
 	
 		
-		
-		
 		return numExp.num;
 	}
 
