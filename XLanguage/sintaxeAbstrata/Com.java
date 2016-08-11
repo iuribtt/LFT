@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class Com extends DVarConsCom {
 	
-	Comando comando;
+	public Comando comando;
 	
 	public Com(Comando comando) {
 		

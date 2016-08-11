@@ -7,9 +7,9 @@ import visitor.XVisitor;
 public class VarInicExt extends DVar{
 	
 	
-	Tipo tipo;
-	String id;
-	List<Exp> exps;
+	public Tipo tipo;
+	public String id;
+	public List<Exp> exps;
 	
 	public VarInicExt(Tipo tipo, String id, List<Exp> exps) {
 		

@@ -6,10 +6,10 @@ import visitor.XVisitor;
 
 public class ConsComp extends DCons{
 	
-	Tipo tipo;
-	String id;
-	List<String> ids;
-	Exp exp;
+	public Tipo tipo;
+	public String id;
+	public List<String> ids;
+	public Exp exp;
 	
 	public ConsComp(Tipo tipo, String id, List<String> ids, Exp exp) {
 		

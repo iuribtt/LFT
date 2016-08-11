@@ -6,8 +6,8 @@ import visitor.XVisitor;
 
 public class BlocoExp extends Exp {
 	
-	List<DCons> cons;
-	Exp exp;
+	public List<DCons> cons;
+	public Exp exp;
 	
 	public BlocoExp(List<DCons> cons, Exp exp) {
 		this.cons = cons;

@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class DC extends DVarConsCom{
 	
-	DCons dCons;
+	public DCons dCons;
 	
 	public DC(DCons dCons) {
 		

@@ -8,9 +8,9 @@ public class VarInicComp  extends DVar{
 	
 	
 	public Tipo tipo;
-	String id;
-	List<String> ids;
-	Exp exp;
+	public String id;
+	public List<String> ids;
+	public Exp exp;
 	
 	public VarInicComp(Tipo tipo, String id, List<String> ids, Exp exp) {
 		

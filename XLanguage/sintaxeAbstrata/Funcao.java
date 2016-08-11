@@ -6,10 +6,10 @@ import visitor.XVisitor;
 
 public class Funcao extends Dec{
 
-	String id;
-	List<Parametro> parametros;
-	Exp exp;
-	Tipo tipo;
+	public String id;
+	public List<Parametro> parametros;
+	public Exp exp;
+	public Tipo tipo;
 	
 	public Funcao(Tipo tipo, String id, List<Parametro> parametros, Exp exp) {
 		

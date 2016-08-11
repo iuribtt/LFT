@@ -4,7 +4,8 @@ import visitor.XVisitor;
 
 public class VarExp extends Exp {
 	
-	Var var;
+	public Var var;
+	
 	public VarExp(Var var) {
 	
 		this.var = var;

@@ -4,9 +4,9 @@ import visitor.XVisitor;
 
 public class IF extends Comando {
 	
-	Exp exp;
-	Comando esquerda;
-	Comando direita;
+	public Exp exp;
+	public Comando esquerda;
+	public Comando direita;
 	
 	public IF( Exp exp, Comando esquerda, Comando direita){
 		

@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class Menos extends Exp{
 	
-	Exp exp;
+	public Exp exp;
 	
 	public Menos(Exp exp) {
 		

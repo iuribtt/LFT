@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class LiteralBool extends Exp {
 	
-	boolean b;
+	public boolean b;
 
 	public LiteralBool(boolean b) {
 		

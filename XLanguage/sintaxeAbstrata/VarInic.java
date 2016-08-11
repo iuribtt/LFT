@@ -4,9 +4,9 @@ import visitor.XVisitor;
 
 public class VarInic extends DVar {
 
-	Tipo tipo;
-	String id;
-	Exp exp;
+	public Tipo tipo;
+	public String id;
+	public Exp exp;
 
 	public VarInic(Tipo tipo, String id, Exp exp) {
 

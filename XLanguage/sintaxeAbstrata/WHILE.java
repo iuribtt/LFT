@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class WHILE extends Comando {
 	
-	Exp exp;
-	Comando comando;
+	public Exp exp;
+	public Comando comando;
 	
 	public WHILE( Exp exp, Comando comando){
 		
@@ -18,4 +18,5 @@ public class WHILE extends Comando {
 	public Object accept(XVisitor visitor) {
 		return visitor.visitWHILE(this);
 	}
+	
 }

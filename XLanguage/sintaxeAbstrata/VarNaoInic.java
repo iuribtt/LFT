@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class VarNaoInic extends DVar{
 	
-	Tipo tipo;
-	String id;
+	public Tipo tipo;
+	public String id;
 	
 	public VarNaoInic(Tipo tipo, String id) {
 

@@ -4,9 +4,9 @@ import visitor.XVisitor;
 
 public class ParArrayCopia extends Parametro {
 	
-	TBase tBase;
-	int dimensao;
-	String id;
+	public TBase tBase;
+	public int dimensao;
+	public String id;
 	
 	public ParArrayCopia(TBase tBase, int dimensao, String id) {
 		

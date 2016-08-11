@@ -6,9 +6,9 @@ import visitor.XVisitor;
 
 public class ConsExt extends DCons{
 	
-	Tipo tipo;
-	String id;
-	List<Exp> exps;
+	public Tipo tipo;
+	public String id;
+	public List<Exp> exps;
 
 	public ConsExt(Tipo tipo, String id, List<Exp> exps) {
 		

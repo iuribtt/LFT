@@ -2,7 +2,10 @@ package checagem;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import ambiente.Symbol;
+import ambiente.Tabela;
 import sintaxeAbstrata.Assign;
 import sintaxeAbstrata.BinExp;
 import sintaxeAbstrata.BinOp;
@@ -54,14 +57,14 @@ import visitor.XVisitor;
 // xlanguage.chegagem
 public class Checador implements XVisitor{
 
-	TabelaSimbolos<String, VinculavelConsVar> ambienteVars = new TabelaSimbolos<...>();
+	Tabela ambienteVars = new Tabela();
 	
-	HashMap<String, VinculavelFunProg> ambienteSub = new HasMap<...>();
-	
+	 Map<String, Tipo> tabela;
 	
 	public Object visitBinExp(BinExp exp) {
 	
-		if(exp.operador == BinOp.Som){
+		if(exp.operador == BinOp.Som || exp.operador == BinOp.Sub || exp.operador == BinOp.Mul 
+				|| exp.operador == BinOp.Div  || exp.operador == BinOp.Mod){
 			TBase tesquerda = (TBase) exp.esquerda.accept(this);
 			TBase tdireita = (TBase) exp.direita.accept(this);
 			
@@ -78,7 +81,7 @@ public class Checador implements XVisitor{
 				}
 			
 		}else if(exp.operador == BinOp.Mul){
-		//....
+	
 		}
 			
 		return null;
@@ -168,8 +171,8 @@ public class Checador implements XVisitor{
 	}
 
 	public Object visitVarNaoInic(VarNaoInic varNaoInic) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tabela.put(varNaoInic.id, varNaoInic.tipo);
 	}
 
 	public Object visitCom(Com com) {

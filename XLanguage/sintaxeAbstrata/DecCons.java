@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class DecCons extends Dec{
 	
-	DecCons dCons;
+	public DecCons dCons;
 	
 	public DecCons(DecCons dCons) {
 		

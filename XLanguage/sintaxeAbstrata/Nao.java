@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class Nao extends Exp{
 	
-	Exp exp;
+	public Exp exp;
 	
 	public Nao(Exp exp) {
 		

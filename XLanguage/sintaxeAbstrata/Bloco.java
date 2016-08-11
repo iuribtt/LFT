@@ -6,7 +6,7 @@ import visitor.XVisitor;
 
 public class Bloco extends Comando {
 	
-	List<DVarConsCom> dVarConsComs;
+	public List<DVarConsCom> dVarConsComs;
 	
 	public Bloco(List<DVarConsCom> dVarConsComs) {
 		

@@ -6,9 +6,9 @@ import visitor.XVisitor;
 
 public class Procedimento extends Dec{
 
-	String id;
-	List<Parametro> parametros;
-	Comando comando;
+	public String id;
+	public List<Parametro> parametros;
+	public Comando comando;
 	
 	public Procedimento(String id, List<Parametro> parametros, Comando comando) {
 		

@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class Indexada extends Var{
 	
-	Var var;
-	Exp exp;
+	public Var var;
+	public Exp exp;
 	
 	public Indexada(Var var, Exp exp) {
 		

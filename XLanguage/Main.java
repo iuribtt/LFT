@@ -29,6 +29,7 @@ public class Main {
 	*/
 	private static void PROG1() {
 
+	
 		
 		
 		//Todas as declaracoes do programa
@@ -65,7 +66,6 @@ public class Main {
 		
 	}
 	
-
 	/**<pre>
 	 * Sintaxe Concreta PROG2
 	 * 
@@ -106,6 +106,21 @@ public class Main {
 		
 	}
 
-
+	/*List<Dec> decs = new ArrayList<Dec>();
+	
+	decs.add(new DecVar(new VarInic(new TipoBase(TBase.Int), "x", new LiteralInt(5))));
+	
+	List<Parametro> parametros =  new ArrayList<Parametro>();
+	parametros.add( new ParBaseCopia(TBase.Int, "a"));
+	
+	decs.add(new Funcao(new TipoBase(TBase.Int), "q", parametros, new BinExp(BinOp.Mul, new VarExp(new Simples("a")) , new VarExp(new Simples("a")) )));
+	
+	List<Exp> exps = new ArrayList<Exp>();
+	exps.add(new VarExp(new Simples("x")));
+	
+	
+	new Assign (new Simples("area"), new ChamadaExp("q", exps));
+	
+	Programa p = new Programa(decs);*/
 	
 }

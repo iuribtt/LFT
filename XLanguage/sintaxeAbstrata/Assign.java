@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class Assign extends Comando{
 	
-	Var var;
-	Exp exp;
+	public Var var;
+	public Exp exp;
 	
 	public Assign(Var var, Exp exp) {
 		

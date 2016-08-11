@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class ParBaseRef extends Parametro {
 
-	TBase tBase;
-	String id;
+	public TBase tBase;
+	public String id;
 
 	public ParBaseRef(TBase tBase, String id) {
 

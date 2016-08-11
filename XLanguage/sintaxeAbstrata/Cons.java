@@ -4,9 +4,9 @@ import visitor.XVisitor;
 
 public class Cons extends DCons{
 	
-	Tipo tipo;
-	String id;
-	Exp exp;
+	public Tipo tipo;
+	public String id;
+	public Exp exp;
 
 	public Cons(Tipo tipo, String id, Exp exp) {
 		

@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class TipoBase extends Tipo{
 	
-	TBase tBase;
+	public TBase tBase;
 	
 	public TipoBase(TBase tBase) {
 		

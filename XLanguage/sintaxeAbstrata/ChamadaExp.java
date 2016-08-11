@@ -6,8 +6,8 @@ import visitor.XVisitor;
 
 public class ChamadaExp extends Exp {
 	
-	String id;
-	List<Exp> exps;
+	public String id;
+	public List<Exp> exps;
 	
 	public ChamadaExp(String id, List<Exp> exps) {
 		

@@ -6,8 +6,8 @@ import visitor.XVisitor;
 
 public class Chamada extends Comando {
 	
-	String id;
-	List<Exp> exps;
+	public String id;
+	public List<Exp> exps;
 	
 	public Chamada(String id, List<Exp> exps) {
 		

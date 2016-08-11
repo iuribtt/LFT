@@ -4,7 +4,7 @@ import visitor.XVisitor;
 
 public class DV extends DVarConsCom{
 	
-	DVar dVar;
+	public DVar dVar;
 
 	public DV(DVar dVar) {
 		

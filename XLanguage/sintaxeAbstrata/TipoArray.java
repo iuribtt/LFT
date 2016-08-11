@@ -6,8 +6,8 @@ import visitor.XVisitor;
 
 public class TipoArray extends Tipo {
 	
-	List<Exp> exps;
-	TBase tBase;
+	public List<Exp> exps;
+	public TBase tBase;
 	
 	
 	public TipoArray(TBase tBase, List<Exp> exps) {

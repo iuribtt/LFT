@@ -4,8 +4,8 @@ import visitor.XVisitor;
 
 public class ParBaseCopia extends Parametro {
 	
-	TBase tBase;
-	String id;
+	public TBase tBase;
+	public String id;
 	
 	public ParBaseCopia(TBase tBase, String id) {
 		

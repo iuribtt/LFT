@@ -4,9 +4,9 @@ import visitor.XVisitor;
 
 public class ParArrayRef extends Parametro {
 	
-	TBase tBase;
-	int dimensao;
-	String id;
+	public TBase tBase;
+	public int dimensao;
+	public String id;
 	
 	public ParArrayRef(TBase tBase, int dimensao, String id) {
 		
