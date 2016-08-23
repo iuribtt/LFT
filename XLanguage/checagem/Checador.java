@@ -1,273 +1,441 @@
 package checagem;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import ambiente.Symbol;
-import ambiente.Tabela;
-import sintaxeAbstrata.Assign;
-import sintaxeAbstrata.BinExp;
-import sintaxeAbstrata.BinOp;
-import sintaxeAbstrata.Bloco;
-import sintaxeAbstrata.BlocoExp;
-import sintaxeAbstrata.Chamada;
-import sintaxeAbstrata.ChamadaExp;
-import sintaxeAbstrata.Com;
-import sintaxeAbstrata.Comando;
-import sintaxeAbstrata.Cons;
-import sintaxeAbstrata.ConsComp;
-import sintaxeAbstrata.ConsExt;
-import sintaxeAbstrata.DC;
-import sintaxeAbstrata.DV;
-import sintaxeAbstrata.DVar;
-import sintaxeAbstrata.DVarConsCom;
-import sintaxeAbstrata.Dec;
-import sintaxeAbstrata.DecCons;
-import sintaxeAbstrata.DecVar;
-import sintaxeAbstrata.Exp;
-import sintaxeAbstrata.Funcao;
-import sintaxeAbstrata.IF;
-import sintaxeAbstrata.Indexada;
-import sintaxeAbstrata.LiteralBool;
-import sintaxeAbstrata.LiteralInt;
-import sintaxeAbstrata.Menos;
-import sintaxeAbstrata.Nao;
-import sintaxeAbstrata.ParArrayCopia;
-import sintaxeAbstrata.ParArrayRef;
-import sintaxeAbstrata.ParBaseCopia;
-import sintaxeAbstrata.ParBaseRef;
-import sintaxeAbstrata.Parametro;
-import sintaxeAbstrata.Procedimento;
-import sintaxeAbstrata.Programa;
-import sintaxeAbstrata.Simples;
-import sintaxeAbstrata.TBase;
-import sintaxeAbstrata.Tipo;
-import sintaxeAbstrata.TipoArray;
-import sintaxeAbstrata.TipoBase;
-import sintaxeAbstrata.Var;
-import sintaxeAbstrata.VarExp;
-import sintaxeAbstrata.VarInic;
-import sintaxeAbstrata.VarInicComp;
-import sintaxeAbstrata.VarInicExt;
-import sintaxeAbstrata.VarNaoInic;
-import sintaxeAbstrata.WHILE;
+import ambiente.TabelaSimbolos;
+import sintaxeAbstrata.*;
 import visitor.XVisitor;
 
 // xlanguage.chegagem
 public class Checador implements XVisitor{
 
-	Tabela ambienteVars = new Tabela();
-	
-	 Map<String, Tipo> tabela;
-	
+
+	//HashMap<String, VinculavelConsVar> ambienteVars = new HashMap<String, VinculavelConsVar>();//Begin e EndEscopo
+
+	TabelaSimbolos ambienteVars = new TabelaSimbolos();
+	//id
+	Map<String, VinculavelFunProc> ambienteSub = new HashMap<String, VinculavelFunProc>();
+
+	/**RegistroDeErros erro = new RegistroErros()//implementar com uma lista*/
 	public Object visitBinExp(BinExp exp) {
-	
+
+
 		if(exp.operador == BinOp.Som || exp.operador == BinOp.Sub || exp.operador == BinOp.Mul 
-				|| exp.operador == BinOp.Div  || exp.operador == BinOp.Mod){
+				|| exp.operador == BinOp.Div  || exp.operador == BinOp.Mod 
+				|| exp.operador == BinOp.Igual || exp.operador == BinOp.Menor){
+
 			TBase tesquerda = (TBase) exp.esquerda.accept(this);
 			TBase tdireita = (TBase) exp.direita.accept(this);
-			
-			if(tesquerda == TBase.Int && tdireita == TBase.Int)
+
+			if(tesquerda == TBase.Int && tdireita == TBase.Int){
+
 				return TBase.Int;
-			
-			else if  (tesquerda == TBase.Real && tdireita == TBase.Real)
+
+			}else if  (tesquerda == TBase.Real && tdireita == TBase.Real){
+
 				return TBase.Real;
-			else
+
+			}else if  (tesquerda == TBase.Int && tdireita == TBase.Real){
+				
+				exp.esquerda = new IntToReal (exp.esquerda);//IntToReal é mais uma da sintaxe abstrata
+				
+				return TBase.Real;
+						
+			//}else if  (tesquerda == TBase.Real && tdireita == TBase.Int){
+			}else
+				//	erro.add("Tipos inconpativeis na soma");//deixar mensagem mais clara
+
+				//return TBase.Int;//uma vez que nao posso adicionar o
+
 				try {
 					throw new Exception();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			
-		}else if(exp.operador == BinOp.Mul){
-	
+
+		}else if(exp.operador == BinOp.E ||
+				exp.operador == BinOp.Ou){
+			//se for n bool return bool and throw
+			return null;
 		}
-			
+
 		return null;
 	}
-	
+
 	public Object visitDecVar(DecVar dVar) {
-		
-		//dVar.dVar.accept(this);
-		return null;
-	}
-	
-	public Object visitDVar(DVar dVar) {
-		
-		//ambienteVars.put(dVar.Var.id, dVar.tipo);
-		
-		return null;
-	}
 
-	public Object visitAssign(Assign assign) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		dVar.dVar.accept(this);
 
-	public Object visitBloco(Bloco bloco) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitChamanda(Chamada chamada) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitIF(IF i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitWHILE(WHILE w) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitCons(Cons cons) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitConsComp(ConsComp consComp) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitConsExt(ConsExt consExt) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitDecCons(DecCons dCons) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitFuncao(Funcao funcao) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitProcedimento(Procedimento procedimento) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitVarInic(VarInic varInic) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitVarInicComp(VarInicComp varInicComp) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitVarInicExt(VarInicExt varInicExt) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitVarNaoInic(VarNaoInic varNaoInic) {
-		
-		return tabela.put(varNaoInic.id, varNaoInic.tipo);
-	}
-
-	public Object visitCom(Com com) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitDC(DC dc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitDV(DV dv) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object visitBlocoExp(BlocoExp blocoExp) {
-		// TODO Auto-generated method stub
+
+		for(DCons dcon : blocoExp.cons)
+			dcon.accept(this);
+
+		blocoExp.exp.accept(this);
+
+		return null;
+
+	}
+
+	public Object visitDVar(DVar dVar) {
+
+		TBase var = (TBase) dVar.accept(this);
+
+		return var;
+
+	}
+
+	public Object visitAssign(Assign assign) {
+
+		TBase exp = (TBase) assign.exp.accept(this);
+		TBase var = (TBase) assign.var.accept(this);
+
+		return exp;
+
+	}
+
+	public Object visitBloco(Bloco bloco) {
+		//begin escopo, adicionar mais um componente na pila e adiciona 
+
+		ambienteVars.beginScope();
+
+		for(DVarConsCom dVarConsCom: bloco.dVarConsComs)
+			dVarConsCom.accept(this);
+
+		ambienteVars.endScope();
+
+
+		return null;
+
+	}
+
+	public Object visitChamanda(Chamada chamada) {
+		//Verificar no ambiente de FuncProc e verificar
+
+		//tabela.get(chamada.id);
+		//chamada.id TODO
+		
+		TBase t = (TBase) chamada.accept(this);
+
+		for (Exp exp : chamada.exps) {
+			exp.accept(this);
+		}
+
+		return t;
+
+	}
+
+	public Object visitIF(IF i) {
+
+		i.exp.accept(this);
+
+		i.direita.accept(this);
+		i.esquerda.accept(this);
+
+		i.exp.accept(this);
+		
+		return null;
+
+	}
+
+	public Object visitWHILE(WHILE w) {
+
+		TBase tesquerda = (TBase) w.exp.accept(this);
+
+		w.comando.accept(this);
+		
+		return tesquerda;
+		
+	}
+
+	public Object visitCons(Cons cons) {
+
+		return cons.exp.accept(this);
+
+	}
+
+	public Object visitConsComp(ConsComp consComp) {
+		
+		consComp.exp.accept(this);
+
+		//TBase tBase = (TBase) consComp.exp.accept(this);
+
+		//TODO
+
+		return null;
+
+	}
+
+	public Object visitConsExt(ConsExt consExt) {
+
+		for(Exp exp : consExt.exps){
+			
+			exp.accept(this);
+			
+		}
+
+		ambienteVars.get(consExt.id);
+		
+		//consExt.tipo;
+		
+		// TODO
+		
+		return null;
+	}
+
+	public Object visitDecCons(DecCons dCons) {
+
+		dCons.accept(this);
+		return null;
+	}
+
+	public Object visitFuncao(Funcao funcao) {
+
+		//TODO
+		//coloca a informacao na tabela de sub programa
+		ambienteVars.beginScope();
+
+		//procedimento.body.accept(this);
+
+		ambienteVars.endScope();
+
+
+		return null;
+	}
+
+	public Object visitProcedimento(Procedimento procedimento) {
+
+		//TODO
+		//coloca a informacao na tabela de sub programa
+		ambienteVars.beginScope();
+
+		//procedimento.body.accept(this);
+
+		ambienteVars.endScope();
+
+		return null;
+	}
+
+	public Object visitVarInic(VarInic varInic) {
+		
+		// TODO gerar ifs para cada tipo base
+		
+		TBase tipo = (TBase) varInic.exp.accept(this);
+		
+		if(tipo == TBase.Int){
+			
+		}
+		
+		return null;
+	}
+
+	public Object visitVarInicComp(VarInicComp varInicComp) {
+		// TODO gerar ifs para cada tipo base
+		return null;
+	}
+
+	public Object visitVarInicExt(VarInicExt varInicExt) {
+
+		for ( Exp exp : varInicExt.exps)
+			exp.accept(this);
+
+
+		ambienteVars.put(varInicExt.id, new VinculavelConsVar(false, (TBase) varInicExt.tipo.accept(this)));
+
+		return null;
+	}
+
+	public Object visitVarNaoInic(VarNaoInic varNaoInic) {
+		/**TODO Usar o get e chegar o tipo ou colocar no ambiente*/
+		ambienteVars.put(varNaoInic.id, new VinculavelConsVar(false, (TBase) varNaoInic.tipo.accept(this))  );
+
+		return null;
+	}
+
+	public Object visitCom(Com com) {
+		com.comando.accept(this);
+		return null;
+	}
+
+	public Object visitDC(DC dc) {
+
+		dc.dCons.accept(this);
+
+		return null;
+	}
+
+	public Object visitDV(DV dv) {
+
+		dv.dVar.accept(this);
+
 		return null;
 	}
 
 	public Object visitChamadaExp(ChamadaExp chamadaExp) {
-		// TODO Auto-generated method stub
+
+		TBase tbase = ((TipoBase) ambienteVars.get(chamadaExp.id)).tBase;
+		for(Exp exp : chamadaExp.exps){
+			TBase tBase = (TBase) exp.accept(this);
+
+			if(!tBase.getClass().equals(tbase.getClass())){
+
+				lancarExcecao("visitChamadaExp");
+
+			}
+		}
+
+
+
 		return null;
 	}
 
 	public Object visitLiteralBool(LiteralBool literalBool) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return literalBool.b;
 	}
 
 	public Object visitLiteralInt(LiteralInt literalInt) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return literalInt.i;
 	}
 
 	public Object visitMenos(Menos menos) {
-		// TODO Auto-generated method stub
+
+		menos.exp.accept(this);
+
 		return null;
 	}
 
 	public Object visitNao(Nao nao) {
-		// TODO Auto-generated method stub
+
+		TBase tBase = (TBase) nao.accept(this);
+
+		if(tBase != TBase.Real || tBase != TBase.Int){
+
+			lancarExcecao("visitNao");
+
+
+		}
+
 		return null;
 	}
 
 	public Object visitVarExp(VarExp varExp) {
-		// TODO Auto-generated method stub
+
+		varExp.var.accept(this);
+
 		return null;
 	}
 
 	public Object visitParArrayCopia(ParArrayCopia parArrayCopia) {
-		// TODO Auto-generated method stub
+		/**O que fazer com a dimensao TODO
+		parArrayRef.dimensao;*/
+
+		//TODO
+		TBase tbase = ((TipoBase) ambienteVars.get(parArrayCopia.id)).tBase;
+
+		if(!parArrayCopia.tBase.getClass().equals(tbase.getClass()) ){
+			lancarExcecao("visitParArrayCopia");
+
+		}
+
 		return null;
 	}
 
 	public Object visitParArrayRef(ParArrayRef parArrayRef) {
-		// TODO Auto-generated method stub
+
+
+		/**O que fazer com a dimensao
+		parArrayRef.dimensao;*/
+		//TODO
+		TBase tbase = ((TipoBase) ambienteVars.get(parArrayRef.id)).tBase;
+
+		if(!parArrayRef.tBase.getClass().equals(tbase.getClass()) ){
+			lancarExcecao("visitParArrayRef");
+
+		}
+
 		return null;
 	}
 
 	public Object visitParBaseCopia(ParBaseCopia parBaseCopia) {
-		// TODO Auto-generated method stub
+
+		ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
+
 		return null;
 	}
 
 	public Object visitParBaseRef(ParBaseRef parBaseRef) {
-		// TODO Auto-generated method stub
+
+		ambienteVars.put(parBaseRef.id, new VinculavelConsVar(false, parBaseRef.tBase) );
+
 		return null;
 	}
 
 	public Object visitPrograma(Programa programa) {
-		// TODO Auto-generated method stub
+
+		for(Dec decs: programa.decs)
+			decs.accept(this);
+
 		return null;
 	}
 
 	public Object visitTipoArray(TipoArray tipoArray) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	public Object visitTipoBase(TipoBase tipoBase) {
-		// TODO Auto-generated method stub
+		for(Exp exp : tipoArray.exps ){
+			TBase tbase = (TBase) exp.accept(this);
+			if(!tipoArray.tBase.getClass().equals(tbase.getClass()) ){
+				lancarExcecao("visitTipoArray");
+
+			}
+
+		}
+
 		return null;
 	}
 
 	public Object visitSimples(Simples simples) {
+
+		return ambienteVars.get(simples.id);
+	}
+
+	public Object visitIndexada(Indexada indexada) {
+
+		indexada.var.accept(this);
+
+		indexada.exp.accept(this);
+
+		return null;
+	}
+
+	public Object visitLiteralReal(LiteralReal literalReal) {
+
+		return literalReal.real;
+	}
+
+	public Object visitTipoBase(sintaxeAbstrata.TipoBase tipoBase) {
+
+		return tipoBase.tBase;
+	}
+
+	private void lancarExcecao(String mensagem){
+
+		try {
+			throw new Exception(mensagem);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public Object visitIntToReal(IntToReal intToReal) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object visitIndexada(Indexada indexada) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -2,6 +2,8 @@ package sintaxeAbstrata;
 
 import java.util.List;
 
+import visitor.XVisitor;
+
 public class Programa {
 	
 	
@@ -12,5 +14,10 @@ public class Programa {
 		this.decs = decs;
 		
 	}
-
+	
+	public Object accept(XVisitor visitor) {
+		return visitor.visitPrograma(this);
+	}
+	
+	
 }

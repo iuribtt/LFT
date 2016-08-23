@@ -39,6 +39,7 @@ public interface XVisitor {
 	Object visitChamadaExp(ChamadaExp chamadaExp);
 	Object visitLiteralBool(LiteralBool literalBool);
 	Object visitLiteralInt(LiteralInt literalInt);
+	Object visitLiteralReal(LiteralReal literalReal);
 	Object visitMenos(Menos menos);
 	Object visitNao(Nao nao);
 	Object visitVarExp(VarExp varExp);
@@ -59,5 +60,8 @@ public interface XVisitor {
 	//Var
 	Object visitSimples(Simples simples);
 	Object visitIndexada(Indexada indexada);
+	Object visitIntToReal(IntToReal intToReal);
+	
+
 
 }

@@ -11,6 +11,7 @@ public class VarExp extends Exp {
 		this.var = var;
 		
 	}
+	
 	@Override
 	public Object accept(XVisitor visitor) {
 		return visitor.visitVarExp(this);
