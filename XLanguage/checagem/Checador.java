@@ -1,5 +1,8 @@
 package checagem;
 
+import java.awt.List;
+import java.nio.channels.AlreadyBoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +20,7 @@ public class Checador implements XVisitor{
 	//id
 	Map<String, VinculavelFunProc> ambienteSub = new HashMap<String, VinculavelFunProc>();
 
-	/**RegistroDeErros erro = new RegistroErros()//implementar com uma lista*/
+	ArrayList<String> registroDeErros = new ArrayList<String>();//implementar com uma lista*/
 	public Object visitBinExp(BinExp exp) {
 
 
@@ -37,12 +40,12 @@ public class Checador implements XVisitor{
 				return TBase.Real;
 
 			}else if  (tesquerda == TBase.Int && tdireita == TBase.Real){
-				
+
 				exp.esquerda = new IntToReal (exp.esquerda);//IntToReal é mais uma da sintaxe abstrata
-				
+
 				return TBase.Real;
-						
-			//}else if  (tesquerda == TBase.Real && tdireita == TBase.Int){
+
+				//}else if  (tesquerda == TBase.Real && tdireita == TBase.Int){
 			}else
 				//	erro.add("Tipos inconpativeis na soma");//deixar mensagem mais clara
 
@@ -72,16 +75,24 @@ public class Checador implements XVisitor{
 
 	public Object visitBlocoExp(BlocoExp blocoExp) {
 
-		for(DCons dcon : blocoExp.cons)
-			dcon.accept(this);
 
-		blocoExp.exp.accept(this);
+		ambienteVars.beginScope();
+		for (DCons d : blocoExp.cons)
+			d.accept(this);
+		ambienteVars.endScope();
 
 		return null;
 
 	}
 
 	public Object visitDVar(DVar dVar) {
+
+		try{
+			ambienteVars.put(((VarNaoInic)dVar).id
+					, ((VarNaoInic)dVar).tipo);
+		}catch (AlreadyBoundException exc) {
+			registroDeErros.add(((VarNaoInic)dVar).id + "repetidamente declarado");
+		}
 
 		TBase var = (TBase) dVar.accept(this);
 
@@ -91,11 +102,31 @@ public class Checador implements XVisitor{
 
 	public Object visitAssign(Assign assign) {
 
-		TBase exp = (TBase) assign.exp.accept(this);
-		TBase var = (TBase) assign.var.accept(this);
+		Tipo tyLeft = (Tipo) assign.var.accept(this);
+		Tipo tyRight = (Tipo) assign.exp.accept(this);
 
-		return exp;
+		if (tyLeft.equivalente(tyRight)) // definir equivalente
+			registroDeErros.add(" Assign tipo nao convergem " + tyLeft.tipoElemento + " != " + tyRight.tipoElemento);
+		else {
+			String id;
+			if (assign.var instanceof Simples) {
+				id = ((Simples) assign.var).id;
+			}else{
+				id = getId((Indexada) assign.var); // definir esta função
+			}
 
+			VinculavelConsVar vinc = (VinculavelConsVar) ambienteVars.get(id);
+			if (vinc.constante)
+				registroDeErros.add("Variavel é constante, não pode ser atribuido novamente.");
+		}
+		return null;
+
+	}
+
+	public String getId(Var var){
+		String id = ((Simples)var.accept(this)).id;
+
+		return id;
 	}
 
 	public Object visitBloco(Bloco bloco) {
@@ -118,7 +149,7 @@ public class Checador implements XVisitor{
 
 		//tabela.get(chamada.id);
 		//chamada.id TODO
-		
+
 		TBase t = (TBase) chamada.accept(this);
 
 		for (Exp exp : chamada.exps) {
@@ -137,7 +168,7 @@ public class Checador implements XVisitor{
 		i.esquerda.accept(this);
 
 		i.exp.accept(this);
-		
+
 		return null;
 
 	}
@@ -147,9 +178,9 @@ public class Checador implements XVisitor{
 		TBase tesquerda = (TBase) w.exp.accept(this);
 
 		w.comando.accept(this);
-		
+
 		return tesquerda;
-		
+
 	}
 
 	public Object visitCons(Cons cons) {
@@ -159,7 +190,7 @@ public class Checador implements XVisitor{
 	}
 
 	public Object visitConsComp(ConsComp consComp) {
-		
+
 		consComp.exp.accept(this);
 
 		//TBase tBase = (TBase) consComp.exp.accept(this);
@@ -173,17 +204,17 @@ public class Checador implements XVisitor{
 	public Object visitConsExt(ConsExt consExt) {
 
 		for(Exp exp : consExt.exps){
-			
+
 			exp.accept(this);
-			
+
 		}
 
 		ambienteVars.get(consExt.id);
-		
+
 		//consExt.tipo;
-		
+
 		// TODO
-		
+
 		return null;
 	}
 
@@ -208,28 +239,27 @@ public class Checador implements XVisitor{
 	}
 
 	public Object visitProcedimento(Procedimento procedimento) {
-
 		//TODO
-		//coloca a informacao na tabela de sub programa
+		//se pDec.id já foi declarado ==> error
+		//adicionar cabeçalho de pDec em ambienteSub
 		ambienteVars.beginScope();
-
+		//... elabora decls dos parâmetros formais pDec.formais
 		//procedimento.body.accept(this);
-
 		ambienteVars.endScope();
 
 		return null;
 	}
 
 	public Object visitVarInic(VarInic varInic) {
-		
+
 		// TODO gerar ifs para cada tipo base
-		
+
 		TBase tipo = (TBase) varInic.exp.accept(this);
-		
+
 		if(tipo == TBase.Int){
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -244,14 +274,14 @@ public class Checador implements XVisitor{
 			exp.accept(this);
 
 
-		ambienteVars.put(varInicExt.id, new VinculavelConsVar(false, (TBase) varInicExt.tipo.accept(this)));
+		ambienteVars.put(varInicExt.id, ((TBase) varInicExt.tipo.accept(this)));
 
 		return null;
 	}
 
 	public Object visitVarNaoInic(VarNaoInic varNaoInic) {
 		/**TODO Usar o get e chegar o tipo ou colocar no ambiente*/
-		ambienteVars.put(varNaoInic.id, new VinculavelConsVar(false, (TBase) varNaoInic.tipo.accept(this))  );
+		ambienteVars.put(varNaoInic.id, varNaoInic.tipo.accept(this));
 
 		return null;
 	}
@@ -277,20 +307,20 @@ public class Checador implements XVisitor{
 
 	public Object visitChamadaExp(ChamadaExp chamadaExp) {
 
-		TBase tbase = ((TipoBase) ambienteVars.get(chamadaExp.id)).tBase;
-		for(Exp exp : chamadaExp.exps){
-			TBase tBase = (TBase) exp.accept(this);
 
-			if(!tBase.getClass().equals(tbase.getClass())){
-
-				lancarExcecao("visitChamadaExp");
-
-			}
+		VinculavelFunProc vinc = ambienteSub.get(chamadaExp.id);
+		if (vinc == null)
+			registroDeErros.add("... procedimento não declarado ....");
+		/*else if (vinc.tipo instanceof Funcao)
+			registroDeErros.add("... chamando fun ao invés de proced ...");*/
+		else {//TODO
+			/*Proc proc = (Proc) vinc;
+			... checar que os parâmetros reais tem tipos equivalentes
+			    com os parâmetros formais e se o parâmetro foi declarado
+				por referência, o correspondente par. real é uma variável ...*/
 		}
-
-
-
 		return null;
+
 	}
 
 	public Object visitLiteralBool(LiteralBool literalBool) {
@@ -363,16 +393,19 @@ public class Checador implements XVisitor{
 	}
 
 	public Object visitParBaseCopia(ParBaseCopia parBaseCopia) {
-
-		ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
+		//TODO
+		ambienteVars.put(parBaseCopia.id, parBaseCopia.tBase );
+		//ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
 
 		return null;
 	}
 
 	public Object visitParBaseRef(ParBaseRef parBaseRef) {
 
-		ambienteVars.put(parBaseRef.id, new VinculavelConsVar(false, parBaseRef.tBase) );
-
+		//TODO
+		ambienteVars.put(parBaseRef.id, parBaseRef.tBase );
+		//ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
+		
 		return null;
 	}
 
@@ -399,8 +432,14 @@ public class Checador implements XVisitor{
 	}
 
 	public Object visitSimples(Simples simples) {
+		VinculavelConsVar vinc = (VinculavelConsVar) ambienteVars.get(simples.id);
+		if (vinc == null) {
+			registroDeErros.add("variável " + simples.id + " não declarada");
+			return vinc.tipo; //TODO Uma solução: definir um tipo void que é subtipo de todo tipo
+			//TODO e devolver ele.
+		} else
+			return vinc.tipo; // O campo type deve estar na superclasse
 
-		return ambienteVars.get(simples.id);
 	}
 
 	public Object visitIndexada(Indexada indexada) {

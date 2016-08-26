@@ -1,4 +1,4 @@
-package checagem;
+/*package checagem;
 import sintaxeAbstrata.*;
 import visitor.XVisitor;
 
@@ -128,8 +128,9 @@ class XChecker implements XVisitor  {
 }
 
 
-/*
+
 	Definição da linguagem
 		- Dois ambientes independentes
 		- constantes arrays não permitem modificação parcial nem total.
+
 */
