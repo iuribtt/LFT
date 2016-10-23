@@ -18,7 +18,7 @@ public class Chamada extends Comando {
 
 	@Override
 	public Object accept(XVisitor visitor) {
-		return visitor.visitChamanda(this);
+		return visitor.visitChamada(this);
 	}
 
 }

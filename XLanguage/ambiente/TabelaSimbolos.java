@@ -17,6 +17,8 @@ public class TabelaSimbolos {
 
 	//	memoria = new HashMap<String, Object>();//Memoria 
 		pilha = new Stack< HashMap<String, Object>>();
+		pilha.push(new HashMap<String, Object>());
+		
 	}
 
 	public Object put(String key, Object value) {

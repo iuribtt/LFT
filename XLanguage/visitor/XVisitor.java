@@ -7,7 +7,7 @@ public interface XVisitor {
 	//Comando
 	Object visitAssign(Assign assign);
 	Object visitBloco(Bloco bloco);
-	Object visitChamanda(Chamada chamada);
+	Object visitChamada(Chamada chamada);
 	Object visitIF(IF i);
 	Object visitWHILE(WHILE w);
 	

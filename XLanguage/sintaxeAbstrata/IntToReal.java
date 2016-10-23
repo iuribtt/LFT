@@ -7,8 +7,8 @@ public class IntToReal extends Exp {
 	public Exp exp;
 	
 	public IntToReal(Exp exp) {
-	
-		this.exp = exp;
+
+		this.exp = (LiteralReal) exp;
 		
 	}
 	

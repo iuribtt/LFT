@@ -20,7 +20,8 @@ public class Checador implements XVisitor{
 	//id
 	Map<String, VinculavelFunProc> ambienteSub = new HashMap<String, VinculavelFunProc>();
 
-	ArrayList<String> registroDeErros = new ArrayList<String>();//implementar com uma lista*/
+	public ArrayList<String> registroDeErros = new ArrayList<String>();//implementar com uma lista*/
+
 	public Object visitBinExp(BinExp exp) {
 
 
@@ -47,15 +48,10 @@ public class Checador implements XVisitor{
 
 				//}else if  (tesquerda == TBase.Real && tdireita == TBase.Int){
 			}else
-				//	erro.add("Tipos inconpativeis na soma");//deixar mensagem mais clara
 
-				//return TBase.Int;//uma vez que nao posso adicionar o
+				registroDeErros.add("Tipos incompatíveis na soma.");
 
-				try {
-					throw new Exception();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			return TBase.Int; 
 
 		}else if(exp.operador == BinOp.E ||
 				exp.operador == BinOp.Ou){
@@ -144,30 +140,42 @@ public class Checador implements XVisitor{
 
 	}
 
-	public Object visitChamanda(Chamada chamada) {
+	public Object visitChamada(Chamada chamada) {
 		//Verificar no ambiente de FuncProc e verificar
 
-		//tabela.get(chamada.id);
+		//de funcao erro, procedimento checa os tipos, se for declarao por referencia ou copia
 		//chamada.id TODO
 
-		TBase t = (TBase) chamada.accept(this);
+
+		//ambienteSub.get(chamada.id).tipo
+
+		//TBase tBase = (TBase) chamada.accept(this);
+
+		if(tBase != ambienteSub.get(chamada.id).tipo){//conversão de tipos
+
+			registroDeErros.add("Chamada tipo incompativel");
+		}
 
 		for (Exp exp : chamada.exps) {
 			exp.accept(this);
 		}
 
-		return t;
+		return null;
 
 	}
 
 	public Object visitIF(IF i) {
 
-		i.exp.accept(this);
+		TBase tBase = ((TBase)i.exp.accept(this));
+
+
+		if(tBase != TBase.Bool ){
+
+			registroDeErros.add("IF suporta expressão somente boleana");
+		}
 
 		i.direita.accept(this);
 		i.esquerda.accept(this);
-
-		i.exp.accept(this);
 
 		return null;
 
@@ -175,11 +183,19 @@ public class Checador implements XVisitor{
 
 	public Object visitWHILE(WHILE w) {
 
-		TBase tesquerda = (TBase) w.exp.accept(this);
+		TBase tBase = ((TBase)w.exp.accept(this));
+
+
+		if(tBase != TBase.Bool ){
+
+			registroDeErros.add("WHILE suporta expressão somente boleana");
+		}
+
 
 		w.comando.accept(this);
 
-		return tesquerda;
+
+		return null;
 
 	}
 
@@ -191,11 +207,24 @@ public class Checador implements XVisitor{
 
 	public Object visitConsComp(ConsComp consComp) {
 
-		consComp.exp.accept(this);
-
-		//TBase tBase = (TBase) consComp.exp.accept(this);
-
 		//TODO
+		//consComp.ids; 	
+		//pesquiso todos os ids e vejo se o tipo bate -- isso é para vetor?
+		for(String id :consComp.ids){
+
+			TBase tipo = (TBase) ambienteVars.get(id);
+			if(tipo != consComp.tipo.accept(this) )
+				registroDeErros.add("ConsComp - ids com tipos incompativeis");
+		}
+
+
+		TBase tBase = (TBase) consComp.exp.accept(this);
+
+
+		if(tBase != consComp.tipo.accept(this) ){
+
+			registroDeErros.add("ConsComp - tipo incompativel");
+		}
 
 		return null;
 
@@ -228,7 +257,17 @@ public class Checador implements XVisitor{
 
 		//TODO
 		//coloca a informacao na tabela de sub programa
-		ambienteVars.beginScope();
+		ambienteVars.beginScope(); 
+
+		funcao.exp.accept(this);
+
+		for(Parametro parametro : funcao.parametros){
+
+			parametro.accept(this);
+		}
+
+
+		/*ambienteSub.put(funcao.id, new VinculavelFunProc(false, funcao.tipo ));//Divergencia de tipos*/
 
 		//procedimento.body.accept(this);
 
@@ -238,6 +277,7 @@ public class Checador implements XVisitor{
 		return null;
 	}
 
+	//Se caso seja por referencia somente variavel, se for pro referencia
 	public Object visitProcedimento(Procedimento procedimento) {
 		//TODO
 		//se pDec.id já foi declarado ==> error
@@ -245,6 +285,16 @@ public class Checador implements XVisitor{
 		ambienteVars.beginScope();
 		//... elabora decls dos parâmetros formais pDec.formais
 		//procedimento.body.accept(this);
+
+		procedimento.comando.accept(this);
+
+		for(Parametro parametro : procedimento.parametros){
+
+			//(TBase)parametro.accept(this));
+			ambienteSub.put(procedimento.id, new VinculavelFunProc(true, List<Tipos> ));//Coloca no ambiente
+
+		}
+
 		ambienteVars.endScope();
 
 		return null;
@@ -252,24 +302,41 @@ public class Checador implements XVisitor{
 
 	public Object visitVarInic(VarInic varInic) {
 
-		// TODO gerar ifs para cada tipo base
-
 		TBase tipo = (TBase) varInic.exp.accept(this);
 
-		if(tipo == TBase.Int){
-
+		if(ambienteVars.get(varInic.id) != null){
+			registroDeErros.add("Variavel \"" + varInic.id + "\" já foi mapeada (Duplicada).");
 		}
 
-		return null;
+		if(tipo != ((TBase)varInic.tipo.accept(this))){
+			registroDeErros.add("Tipos incompativel para a variavel \"" + varInic.id + "\"");
+		}
+
+		ambienteVars.put(varInic.id, ((TBase) varInic.tipo.accept(this)));//Coloca no ambiente
+
+		return tipo;
 	}
 
 	public Object visitVarInicComp(VarInicComp varInicComp) {
-		// TODO gerar ifs para cada tipo base
-		return null;
+
+		//TODO Iniciar escopo? {i|b[i]} ou {i|i+i}
+		//criar um escopo para i e verificar b
+
+		varInicComp.id;
+		varInicComp.ids;
+
+		TBase tBase = (TBase) varInicComp.exp.accept(this);
+
+		if(tBase != varInicComp.tipo.accept(this))
+			registroDeErros.add("Tipos incompativel para a variavel \"" + varInicComp.id + "\"");
+
+
+		return varInicComp.tipo;
 	}
 
 	public Object visitVarInicExt(VarInicExt varInicExt) {
 
+		//{0,0,5,8,8 } chegar os tipos equivalencia
 		for ( Exp exp : varInicExt.exps)
 			exp.accept(this);
 
@@ -307,35 +374,51 @@ public class Checador implements XVisitor{
 
 	public Object visitChamadaExp(ChamadaExp chamadaExp) {
 
-
+		///se chamar procediemto erro pois necesita do retorno
 		VinculavelFunProc vinc = ambienteSub.get(chamadaExp.id);
-		if (vinc == null)
+		if (vinc == null){
 			registroDeErros.add("... procedimento não declarado ....");
-		/*else if (vinc.tipo instanceof Funcao)
-			registroDeErros.add("... chamando fun ao invés de proced ...");*/
-		else {//TODO
-			/*Proc proc = (Proc) vinc;
-			... checar que os parâmetros reais tem tipos equivalentes
+		}else
+
+			if (!vinc.isProcedimento){
+
+				registroDeErros.add("... chamando fun ao invés de procedimento ...");
+
+			}else {
+
+				//Procedimento proc = (Procedimento) vinc;
+				/*... checar que os parâmetros reais tem tipos equivalentes
 			    com os parâmetros formais e se o parâmetro foi declarado
 				por referência, o correspondente par. real é uma variável ...*/
-		}
-		return null;
+			}
+
+		return vinc.tipo;
 
 	}
 
 	public Object visitLiteralBool(LiteralBool literalBool) {
 
-		return literalBool.b;
+		return TBase.Bool;
 	}
 
 	public Object visitLiteralInt(LiteralInt literalInt) {
 
-		return literalInt.i;
+		return TBase.Int;
 	}
+	public Object visitLiteralReal(LiteralReal literalReal) {
+
+		return TBase.Real;
+	}
+
 
 	public Object visitMenos(Menos menos) {
 
-		menos.exp.accept(this);
+		TBase tBase = (TBase) menos.accept(this);
+
+		if(tBase != TBase.Real || tBase != TBase.Int){
+
+			registroDeErros.add("Menos de tipo não numerico.");
+		}
 
 		return null;
 	}
@@ -344,11 +427,9 @@ public class Checador implements XVisitor{
 
 		TBase tBase = (TBase) nao.accept(this);
 
-		if(tBase != TBase.Real || tBase != TBase.Int){
+		if(tBase != TBase.Bool ){
 
-			lancarExcecao("visitNao");
-
-
+			registroDeErros.add("Negação de tipo não boolean.");
 		}
 
 		return null;
@@ -369,47 +450,48 @@ public class Checador implements XVisitor{
 		TBase tbase = ((TipoBase) ambienteVars.get(parArrayCopia.id)).tBase;
 
 		if(!parArrayCopia.tBase.getClass().equals(tbase.getClass()) ){
-			lancarExcecao("visitParArrayCopia");
+			registroDeErros.add("Array Copia tipo inconsistentes");
 
 		}
 
 		return null;
 	}
 
+
+
 	public Object visitParArrayRef(ParArrayRef parArrayRef) {
 
 
-		/**O que fazer com a dimensao
-		parArrayRef.dimensao;*/
+		//O que fazer com a dimensao
+		//parArrayRef.dimensao
 		//TODO
 		TBase tbase = ((TipoBase) ambienteVars.get(parArrayRef.id)).tBase;
 
-		if(!parArrayRef.tBase.getClass().equals(tbase.getClass()) ){
-			lancarExcecao("visitParArrayRef");
-
+		//TBase tbase = (TBase) parArrayRef.accept(this);
+		if (parArrayRef.tBase != tbase){
+			registroDeErros.add("Array referencia tipo inconsistentes");
 		}
 
 		return null;
 	}
 
 	public Object visitParBaseCopia(ParBaseCopia parBaseCopia) {
-		//TODO
 		ambienteVars.put(parBaseCopia.id, parBaseCopia.tBase );
-		//ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
-
 		return null;
 	}
 
 	public Object visitParBaseRef(ParBaseRef parBaseRef) {
-
-		//TODO
 		ambienteVars.put(parBaseRef.id, parBaseRef.tBase );
-		//ambienteVars.put(parBaseCopia.id, new VinculavelConsVar(false, parBaseCopia.tBase) );
-		
 		return null;
 	}
 
 	public Object visitPrograma(Programa programa) {
+
+
+		/*for(Dec decs: programa.decs)
+			adcicionar no amiente de funcoes os cabecalhos
+			instanceof
+		 */
 
 		for(Dec decs: programa.decs)
 			decs.accept(this);
@@ -421,10 +503,10 @@ public class Checador implements XVisitor{
 
 		for(Exp exp : tipoArray.exps ){
 			TBase tbase = (TBase) exp.accept(this);
-			if(!tipoArray.tBase.getClass().equals(tbase.getClass()) ){
-				lancarExcecao("visitTipoArray");
-
+			if (tipoArray.tBase != tbase){
+				registroDeErros.add("Array tipo inconsistentes");
 			}
+
 
 		}
 
@@ -451,29 +533,15 @@ public class Checador implements XVisitor{
 		return null;
 	}
 
-	public Object visitLiteralReal(LiteralReal literalReal) {
 
-		return literalReal.real;
-	}
 
 	public Object visitTipoBase(sintaxeAbstrata.TipoBase tipoBase) {
 
 		return tipoBase.tBase;
 	}
 
-	private void lancarExcecao(String mensagem){
-
-		try {
-			throw new Exception(mensagem);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	public Object visitIntToReal(IntToReal intToReal) {
-		// TODO Auto-generated method stub
-		return null;
+		return intToReal.accept(this);
 	}
 
 

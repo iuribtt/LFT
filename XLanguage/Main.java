@@ -18,6 +18,8 @@ public class Main {
 		List<Parametro> parametros = new ArrayList<Parametro>();
 
 		//declaracao e inicializacao da variavel lado
+		d.add( new DecVar(new VarInic(new TipoBase(TBase.Int), "lado", new LiteralBool(true))));
+		
 		d.add( new DecVar(new VarInic(new TipoBase(TBase.Int), "lado", new LiteralInt(7))));
 		
 		Programa prog2 = new Programa (d);
@@ -25,6 +27,11 @@ public class Main {
 		
 		Checador c = new Checador();
 		prog2.accept(c);
+		
+		for(String erro :c.registroDeErros){
+			
+			System.out.println(erro);
+		}
 		
 		/*PROG1();
 		PROG2();*/
